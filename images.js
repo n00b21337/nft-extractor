@@ -1,8 +1,11 @@
-const download = require("download");
+const download = require("image-downloader");
 var fs = require("fs");
 
-function downloadJson(url, filePath) {
-  return download(url, filePath).then(() => {});
+function downloadImage(url, filepath) {
+  return download.image({
+    url,
+    dest: filepath,
+  });
 }
 
 function printProgress(progress, total) {
@@ -12,11 +15,11 @@ function printProgress(progress, total) {
 }
 
 async function main() {
-  let baseURI = "https://api.chainrunners.xyz/tokens/metadata/";
+  let baseURI = "https://img.chainrunners.xyz/api/v1/tokens/png/";
   let projectName = "Runners";
 
   let folderBase = "/extracted";
-  let projectDir = __dirname + folderBase + "/" + projectName + "/meta/";
+  let projectDir = __dirname + folderBase + "/" + projectName + "/images/";
   let size = 13000;
 
   if (!fs.existsSync(projectDir)) {
@@ -25,7 +28,7 @@ async function main() {
 
   for (var i = 1; i < size; i++) {
     let file = baseURI + i;
-    await downloadJson(file, projectDir);
+    await downloadImage(file, projectDir);
     printProgress(i, size);
   }
   console.log("Download complete");
